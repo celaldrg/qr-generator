@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR Code Generator</title>
+  <meta name="description" content="QR code generator written from scratch: links, text, Wi-Fi, e-mail, phone, SMS and vCard codes with a live preview and PNG/SVG export. Runs entirely in your browser.">
+  <meta name="theme-color" content="#0f172a">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="QR Code Generator">
+  <meta property="og:description" content="Make QR codes for links, Wi-Fi, e-mail, phone, SMS and contacts. Live preview, PNG and SVG export; nothing leaves your browser.">
+  <meta property="og:url" content="https://celaldrg.github.io/qr-generator/">
+  <meta property="og:image" content="https://celaldrg.github.io/qr-generator/docs/screenshot.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234ade80'/%3E%3Cg fill='none' stroke='%230f172a' stroke-width='2.2'%3E%3Crect x='6.1' y='6.1' width='7.8' height='7.8' rx='1.6'/%3E%3Crect x='18.1' y='6.1' width='7.8' height='7.8' rx='1.6'/%3E%3Crect x='6.1' y='18.1' width='7.8' height='7.8' rx='1.6'/%3E%3C/g%3E%3Cg fill='%230f172a'%3E%3Crect x='8.6' y='8.6' width='2.8' height='2.8' rx='.5'/%3E%3Crect x='20.6' y='8.6' width='2.8' height='2.8' rx='.5'/%3E%3Crect x='8.6' y='20.6' width='2.8' height='2.8' rx='.5'/%3E%3Crect x='18' y='18' width='3.4' height='3.4' rx='.6'/%3E%3Crect x='22.6' y='22.6' width='3.4' height='3.4' rx='.6'/%3E%3Crect x='18' y='22.6' width='3.4' height='3.4' rx='.6'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="src/main.js"></script>
+</head>
+<body>
+  <header>
+    <div class="topbar__inner">
+      <div class="brand">
+        <svg class="brand__logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="8" fill="#4ade80"/>
+          <g fill="none" stroke="#0f172a" stroke-width="2.2">
+            <rect x="6.1" y="6.1" width="7.8" height="7.8" rx="1.6"/>
+            <rect x="18.1" y="6.1" width="7.8" height="7.8" rx="1.6"/>
+            <rect x="6.1" y="18.1" width="7.8" height="7.8" rx="1.6"/>
+          </g>
+          <g fill="#0f172a">
+            <rect x="8.6" y="8.6" width="2.8" height="2.8" rx=".5"/>
+            <rect x="20.6" y="8.6" width="2.8" height="2.8" rx=".5"/>
+            <rect x="8.6" y="20.6" width="2.8" height="2.8" rx=".5"/>
+            <rect x="18" y="18" width="3.4" height="3.4" rx=".6"/>
+            <rect x="22.6" y="22.6" width="3.4" height="3.4" rx=".6"/>
+            <rect x="18" y="22.6" width="3.4" height="3.4" rx=".6"/>
+          </g>
+        </svg>
+        <h1 class="brand__title" data-i18n="app.title">QR Code Generator</h1>
+      </div>
+      <div class="topbar__actions">
+        <button type="button" class="btn btn--ghost" id="reset-button" title="Clear all fields and options" data-i18n-title="header.resetTitle">
+          <svg class="icon reset-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 3.5v5h5"/></svg>
+          <span data-i18n="header.reset">Reset</span>
+        </button>
+        <button type="button" class="btn btn--lang" id="lang-button" aria-label="TR: Switch to Turkish" title="TR: Switch to Turkish" data-i18n-aria-label="lang.switch" data-i18n-title="lang.switch">TR</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card card--content" aria-labelledby="content-title">
+      <h2 class="card__title" id="content-title" data-i18n="section.content">Content</h2>
+      <div class="types" role="tablist" id="type-tabs" aria-label="Content type" data-i18n-aria-label="types.label">
+        <button type="button" class="type" role="tab" id="tab-text" data-type="text" aria-controls="panel-text" aria-selected="true">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg>
+          <span data-i18n="type.text">Text / URL</span>
+        </button>
+        <button type="button" class="type" role="tab" id="tab-wifi" data-type="wifi" aria-controls="panel-wifi" aria-selected="false" tabindex="-1">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 9a14 14 0 0 1 19 0"/><path d="M5.8 12.6a9.3 9.3 0 0 1 12.4 0"/><path d="M9 16.1a4.7 4.7 0 0 1 6 0"/><path d="M12 19.6h.01"/></svg>
+          <span data-i18n="type.wifi">Wi-Fi</span>
+        </button>
+        <button type="button" class="type" role="tab" id="tab-email" data-type="email" aria-controls="panel-email" aria-selected="false" tabindex="-1">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.8 7.2 8.2 5.8 8.2-5.8"/></svg>
+          <span data-i18n="type.email">E-mail</span>
+        </button>
+        <button type="button" class="type" role="tab" id="tab-phone" data-type="phone" aria-controls="panel-phone" aria-selected="false" tabindex="-1">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18h2"/></svg>
+          <span data-i18n="type.phone">Phone</span>
+        </button>
+        <button type="button" class="type" role="tab" id="tab-sms" data-type="sms" aria-controls="panel-sms" aria-selected="false" tabindex="-1">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.5 15a2 2 0 0 1-2 2H9l-5.5 4V6a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/><path d="M8 9h8.5M8 12.5h5"/></svg>
+          <span data-i18n="type.sms">SMS</span>
+        </button>
+        <button type="button" class="type" role="tab" id="tab-vcard" data-type="vcard" aria-controls="panel-vcard" aria-selected="false" tabindex="-1">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><circle cx="8.5" cy="10.6" r="2.1"/><path d="M5.4 15.8a3.3 3.3 0 0 1 6.2 0"/><path d="M14.5 10h4.5M14.5 13.5h3"/></svg>
+          <span data-i18n="type.vcard">vCard</span>
+        </button>
+      </div>
+      <p class="type-hint" id="type-hint"></p>
+      <form id="fields-form" autocomplete="off" novalidate></form>
+    </section>
+
+    <section class="card card--preview" aria-labelledby="preview-title">
+      <div class="card__head">
+        <h2 class="card__title" id="preview-title" data-i18n="section.preview">Preview</h2>
+        <span class="badge" data-i18n="preview.live">Live</span>
+      </div>
+      <div class="preview" id="preview-frame">
+        <div class="preview__stage" id="preview-stage" hidden>
+          <svg class="preview__code" id="qr-code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges" role="img">
+            <rect id="qr-background" width="29" height="29" fill="#ffffff"/>
+            <path id="qr-modules" d="" fill="#000000"/>
+          </svg>
+        </div>
+        <div class="placeholder" id="placeholder">
+          <svg class="placeholder__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <g fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round">
+              <rect x="5.5" y="5.5" width="13" height="13" rx="2.5"/>
+              <rect x="29.5" y="5.5" width="13" height="13" rx="2.5"/>
+              <rect x="5.5" y="29.5" width="13" height="13" rx="2.5"/>
+            </g>
+            <g fill="currentColor">
+              <rect x="10" y="10" width="4" height="4" rx="1"/>
+              <rect x="34" y="10" width="4" height="4" rx="1"/>
+              <rect x="10" y="34" width="4" height="4" rx="1"/>
+              <rect x="28" y="28" width="5" height="5" rx="1"/>
+              <rect x="37" y="37" width="5" height="5" rx="1"/>
+              <rect x="28" y="37" width="5" height="5" rx="1"/>
+              <rect x="37" y="28" width="5" height="5" rx="1" opacity=".4"/>
+            </g>
+          </svg>
+          <p class="placeholder__title" id="placeholder-title"></p>
+          <p class="placeholder__text" id="placeholder-text"></p>
+        </div>
+      </div>
+      <p class="warning" id="contrast-warning" hidden>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10.3 4 2.2 18a2 2 0 0 0 1.7 3h16.2a2 2 0 0 0 1.7-3L13.7 4a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4"/><path d="M12 17h.01"/></svg>
+        <span id="contrast-warning-text"></span>
+      </p>
+      <dl class="stats">
+        <div class="stat">
+          <dt data-i18n="stat.version">Version</dt>
+          <dd id="stat-version">–</dd>
+        </div>
+        <div class="stat">
+          <dt data-i18n="stat.mode">Mode</dt>
+          <dd id="stat-mode">–</dd>
+        </div>
+        <div class="stat stat--wide">
+          <dt data-i18n="stat.capacity">Capacity used</dt>
+          <dd id="stat-capacity">–</dd>
+          <dd class="stat__meter"><span class="meter" aria-hidden="true"><span class="meter__fill" id="capacity-fill"></span></span><span class="stat__percent" id="stat-percent"></span></dd>
+        </div>
+      </dl>
+      <p class="details" id="details"></p>
+      <div class="actions">
+        <button type="button" class="btn btn--primary" id="png-button" aria-keyshortcuts="P">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"/><path d="m7 10.5 5 5 5-5"/><path d="M5 20h14"/></svg>
+          <span data-i18n="action.png">Download PNG</span>
+        </button>
+        <button type="button" class="btn" id="svg-button" aria-keyshortcuts="S">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"/><path d="m7 10.5 5 5 5-5"/><path d="M5 20h14"/></svg>
+          <span data-i18n="action.svg">Download SVG</span>
+        </button>
+        <button type="button" class="btn" id="copy-button" aria-keyshortcuts="C">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11.5" height="11.5" rx="2"/><path d="M5.5 15H5a1.5 1.5 0 0 1-1.5-1.5V5A1.5 1.5 0 0 1 5 3.5h8.5A1.5 1.5 0 0 1 15 5v.5"/></svg>
+          <span data-i18n="action.copy">Copy SVG</span>
+        </button>
+      </div>
+      <p class="note">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>
+        <span data-i18n="privacy">Made on your device: nothing leaves your browser.</span>
+      </p>
+      <p class="shortcuts" data-i18n="shortcuts">Keys: 1–6 type · L M Q H level · O options · P PNG · S SVG · C copy SVG</p>
+    </section>
+
+    <section class="card card--options" aria-labelledby="options-title">
+      <h2 class="card__title" id="options-title">
+        <button type="button" class="options-toggle" id="options-toggle" aria-expanded="false" aria-controls="options-body" aria-keyshortcuts="O">
+          <span data-i18n="section.options">Options</span>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </h2>
+      <div class="options" id="options-body" hidden>
+        <div class="option">
+          <div class="option__row">
+            <span class="option__label" id="ec-label" data-i18n="option.ecLevel">Error correction</span>
+            <span class="option__value" id="ec-value"></span>
+          </div>
+          <div class="segmented" role="radiogroup" aria-labelledby="ec-label" id="ec-levels">
+            <label class="seg"><input type="radio" name="ecLevel" value="L"><span class="seg__body"><span class="seg__letter">L</span><span class="seg__percent" data-level="L"></span><span class="sr-only" data-i18n="ec.L">Low</span></span></label>
+            <label class="seg"><input type="radio" name="ecLevel" value="M"><span class="seg__body"><span class="seg__letter">M</span><span class="seg__percent" data-level="M"></span><span class="sr-only" data-i18n="ec.M">Medium</span></span></label>
+            <label class="seg"><input type="radio" name="ecLevel" value="Q"><span class="seg__body"><span class="seg__letter">Q</span><span class="seg__percent" data-level="Q"></span><span class="sr-only" data-i18n="ec.Q">Quartile</span></span></label>
+            <label class="seg"><input type="radio" name="ecLevel" value="H"><span class="seg__body"><span class="seg__letter">H</span><span class="seg__percent" data-level="H"></span><span class="sr-only" data-i18n="ec.H">High</span></span></label>
+          </div>
+          <p class="option__hint" data-i18n="option.ecHint">Higher levels survive more damage but make the code denser.</p>
+        </div>
+        <div class="option-grid">
+          <div class="option">
+            <div class="option__row">
+              <label class="option__label" for="module-size" data-i18n="option.moduleSize">Module size</label>
+              <output class="option__value" id="module-size-value" for="module-size"></output>
+            </div>
+            <input type="range" class="range" id="module-size" data-option="moduleSize" step="1">
+          </div>
+          <div class="option">
+            <div class="option__row">
+              <label class="option__label" for="quiet-zone" data-i18n="option.quietZone">Quiet zone</label>
+              <output class="option__value" id="quiet-zone-value" for="quiet-zone"></output>
+            </div>
+            <input type="range" class="range" id="quiet-zone" data-option="quietZone" step="1">
+          </div>
+        </div>
+        <div class="option-grid">
+          <label class="color">
+            <input type="color" id="foreground" data-option="foreground" value="#000000">
+            <span class="color__text"><span class="color__name" data-i18n="option.foreground">Foreground</span><span class="color__hex" id="foreground-hex"></span></span>
+          </label>
+          <label class="color">
+            <input type="color" id="background" data-option="background" value="#ffffff">
+            <span class="color__text"><span class="color__name" data-i18n="option.background">Background</span><span class="color__hex" id="background-hex"></span></span>
+          </label>
+        </div>
+        <p class="contrast" id="contrast-line"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><a href="https://github.com/celaldrg/qr-generator" data-i18n="footer.source">MIT · Source on GitHub</a></p>
+    <p class="footer__small" data-i18n="footer.trademark">QR Code is a registered trademark of DENSO WAVE INCORPORATED.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <template id="eye-icon">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+  </template>
+</body>
+</html>

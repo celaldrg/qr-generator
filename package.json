@@ -1,0 +1,11 @@
+{
+  "name": "qr-generator",
+  "version": "1.0.0",
+  "description": "QR Code generator written from scratch in vanilla JavaScript: all versions, error correction levels and masks, with Wi-Fi, e-mail, phone, SMS and vCard payloads. Runs entirely in the browser.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
